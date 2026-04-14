@@ -1,10 +1,9 @@
-from datetime import datetime  # ← ДОБАВЬТЕ ЭТУ СТРОКУ
 from extensions import db
 from flask_login import UserMixin
-
+from datetime import datetime
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'users'  # ← ДВА подчеркивания!
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -15,7 +14,6 @@ class User(UserMixin, db.Model):
     cart_items = db.relationship('CartItem', backref='user', lazy=True)
     orders = db.relationship('Order', backref='user', lazy=True)
 
-    # Метод для корзины (чтобы исправить ошибку UndefinedError)
     def get_cart_total(self):
         return sum(item.quantity for item in self.cart_items)
 

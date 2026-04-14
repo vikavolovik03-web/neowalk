@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NeoWalk{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <nav class="navbar">
+            <a href="{{ url_for('index') }}" class="logo">NeoWalk</a>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Главная</a>
+                <a href="{{ url_for('catalog') }}" class="{% if 'catalog' in request.endpoint %}active{% endif %}">Каталог</a>
+                <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">О нас</a>
+            </div>
+            
+            <div class="user-actions">
+                <div class="user-actions">
+    {% if current_user.is_authenticated %}
+        {% if current_user.is_admin %}
+            <a href="{{ url_for('admin_dashboard') }}" style="color: red; font-weight: bold; margin-right: 15px;">АДМИНКА</a>
+        {% endif %}
+        
+        <div class="user-profile">
+            <a href="{{ url_for('profile') }}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+                <span>👤 {{ current_user.username }}</span>
+            </a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Выйти</a>
+        </div>
+    {% else %}
+        <a href="{{ url_for('login') }}" class="login-btn">Вход</a>
+    {% endif %}
+    
+    <!-- Иконка корзины -->
+    <a href="{{ url_for('cart') }}" class="cart-btn" style="position: relative; font-size: 24px;">
+        🛒
+        {% if current_user.is_authenticated %}
+            {% set cart_count = current_user.cart_items|sum(attribute='quantity') %}
+            {% if cart_count > 0 %}
+                <span style="position: absolute; top: -8px; right: -8px; background: var(--sale-red); color: white; font-size: 11px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">{{ cart_count }}</span>
+            {% endif %}
+        {% endif %}
+    </a>
+</div>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+   <div class="main-wrapper">
+    {% block content %}{% endblock %}
+</div>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>NeoWalk</h4>
+                <p>© 2026 Интернет-магазин NeoWalk.<br>Все права защищены.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h5>Компания</h5>
+                <a href="{{ url_for('about') }}">О нас</a>
+                <a href="{{ url_for('contacts') }}">Контакты</a>
+            </div>
+            
+            <div class="footer-column">
+                <h5>Информация</h5>
+                {% if current_user.is_authenticated %}
+                    <a href="#">Личный кабинет</a>
+                {% endif %}
+                <a href="#">Доставка</a>
+                <a href="#">Оплата</a>
+            </div>
+            
+            <div class="footer-column">
+                <h5>Мы в сети</h5>
+                <a href="#" class="social-link">📱 ВКонтакте</a>
+                <a href="#" class="social-link">✈️ Telegram</a>
+            </div>
+            
+            <div class="footer-column">
+                <h5>Контакты</h5>
+                <p class="contact-phone">📞 +8 (904) 268-90-96</p>
+                <p class="contact-email">✉️ volovik03@gmail.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.updateCartCount = function() {
+            fetch('/api/cart_count')
+                .then(r => r.json())
+                .then(d => {
+                    const el = document.getElementById('cart-count');
+                    if (el) { 
+                        el.textContent = d.count; 
+                        el.classList.add('update');
+                        setTimeout(() => el.classList.remove('update'), 300);
+                    }
+                });
+        };
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация - NeoWalk{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-form-wrapper">
+        <h2 class="auth-title">Регистрация</h2>
+        <p class="auth-subtitle">Создайте аккаунт, чтобы покупать</p>
+        
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label>Логин</label>
+                <input type="text" name="username" placeholder="Ваш логин" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="example@mail.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" name="password" placeholder="Минимум 6 символов" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Подтвердите пароль</label>
+                <input type="password" name="confirm_password" placeholder="Повторите пароль" required>
+            </div>
+            
+            <button type="submit" class="btn-auth-submit">Зарегистрироваться</button>
+        </form>
+        
+        <div class="auth-divider">Уже есть аккаунт?</div>
+        
+        <a href="{{ url_for('login') }}" class="btn-auth-outline">Войти</a>
+    </div>
+</div>
+{% endblock %}

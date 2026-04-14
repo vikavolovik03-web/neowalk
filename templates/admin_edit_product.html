@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Редактирование товара{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 40px 0; max-width: 600px;">
+    <h1>Редактировать: {{ product.name }}</h1>
+    <form method="POST" style="background: white; padding: 30px; border-radius: 10px; margin-top: 20px;">
+        <div style="margin-bottom: 15px;">
+            <label>Название:</label>
+            <input type="text" name="name" value="{{ product.name }}" style="width: 100%; padding: 10px;" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label>Цена:</label>
+            <input type="number" name="price" value="{{ product.price }}" style="width: 100%; padding: 10px;" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label>Количество на складе:</label>
+            <input type="number" name="stock" value="{{ product.stock }}" style="width: 100%; padding: 10px;" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label>Описание:</label>
+            <textarea name="description" style="width: 100%; padding: 10px; height: 100px;">{{ product.description }}</textarea>
+        </div>
+        <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer;">Сохранить</button>
+    </form>
+    <br>
+    <a href="{{ url_for('admin_products') }}">← Назад к товарам</a>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - NeoWalk{% endblock %}
+
+{% block content %}
+<section class="product-detail">
+    <div class="container">
+        <div class="product-main-section">
+            <div class="product-gallery">
+                {% if product.image %}
+                    <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}">
+                {% else %}
+                    <span style="font-size:100px">👟</span>
+                {% endif %}
+            </div>
+            
+            <div class="product-info-section">
+                <div class="product-brand-large">{{ product.brand.name }}</div>
+                <h1 class="product-title">{{ product.name }}</h1>
+                
+                <div class="product-price-block">
+                    <span class="price-current">{{ product.price }} руб</span>
+                    {% if product.old_price %}
+                        <span class="price-old">{{ product.old_price }} руб</span>
+                    {% endif %}
+                </div>
+
+                <p>{{ product.description }}</p>
+
+                <div class="size-selector">
+                    <h3>Размер:</h3>
+                    <div class="size-options">
+                        {% for size in product.sizes %}
+                            <button class="size-btn">{{ size }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST">
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-btn" onclick="this.nextElementSibling.stepDown()">-</button>
+                        <input type="number" name="quantity" value="1" min="1" class="qty-input">
+                        <button type="button" class="qty-btn" onclick="this.previousElementSibling.stepUp()">+</button>
+                    </div>
+                    <button type="submit" class="btn-add-cart">Добавить в корзину</button>
+                </form>
+            </div>
+        </div>
+
+        {% if related_products %}
+        <h2 class="section-title">Вам может понравиться</h2>
+        <div class="products-grid">
+            {% for rel in related_products %}
+            <div class="product-card">
+                <a href="{{ url_for('product', product_id=rel.id) }}">
+                    <div class="product-image">
+                        {% if rel.image %}
+                            <img src="{{ url_for('static', filename=rel.image) }}" alt="{{ rel.name }}">
+                        {% else %}
+                            <span style="font-size:50px">👟</span>
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="product-info">
+                    <div class="product-brand">{{ rel.brand.name }}</div>
+                    <div class="product-name">{{ rel.name }}</div>
+                    <div class="product-price">
+                        <span class="current-price">{{ rel.price }} руб</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Заказ #{{ order.id }} - Админка{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 60px 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1>Заказ #{{ order.id }}</h1>
+        <a href="{{ url_for('admin_orders') }}" style="padding: 10px 20px; background: var(--light-gray); border-radius: 8px; text-decoration: none;">← Назад к заказам</a>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+        <!-- Информация о клиенте -->
+        <div style="background: var(--light-gray); padding: 30px; border-radius: 15px;">
+            <h3 style="margin-bottom: 20px;">Информация о клиенте</h3>
+            <p><strong>Имя:</strong> {{ order.user.username }}</p>
+            <p><strong>Email:</strong> {{ order.user.email }}</p>
+            <p><strong>Телефон:</strong> {{ order.user.phone or 'Не указан' }}</p>
+            <p><strong>ID пользователя:</strong> {{ order.user_id }}</p>
+        </div>
+        
+        <!-- Статус заказа -->
+        <div style="background: var(--light-gray); padding: 30px; border-radius: 15px;">
+            <h3 style="margin-bottom: 20px;">Статус заказа</h3>
+            <form method="POST" action="{{ url_for('admin_update_order_status', order_id=order.id) }}" style="margin-bottom: 20px;">
+                <select name="status" style="width: 100%; padding: 12px; border: 2px solid var(--primary-black); border-radius: 8px; font-size: 15px; margin-bottom: 15px;">
+                    <option value="new" {% if order.status == 'new' %}selected{% endif %}>Новый</option>
+                    <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>В обработке</option>
+                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Отправлен</option>
+                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Доставлен</option>
+                    <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Отменен</option>
+                </select>
+                <button type="submit" style="width: 100%; padding: 12px; background: var(--primary-black); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Обновить статус</button>
+            </form>
+            <p><strong>Дата создания:</strong> {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+            <p><strong>Сумма заказа:</strong> <span style="font-size: 24px; font-weight: 700; color: var(--primary-black);">{{ order.total }} руб.</span></p>
+        </div>
+    </div>
+    
+    <!-- Товары в заказе -->
+    <div style="background: var(--light-gray); padding: 30px; border-radius: 15px;">
+        <h3 style="margin-bottom: 20px;">Товары в заказе</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--primary-black);">
+                    <th style="padding: 12px; text-align: left;">Товар</th>
+                    <th style="padding: 12px; text-align: left;">Цена</th>
+                    <th style="padding: 12px; text-align: left;">Количество</th>
+                    <th style="padding: 12px; text-align: left;">Сумма</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items %}
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 15px;">
+                        <strong>{{ item.product.name }}</strong>
+                        <p style="color: var(--accent-gray); font-size: 14px;">{{ item.product.brand.name }}</p>
+                    </td>
+                    <td style="padding: 15px;">{{ item.price }} руб.</td>
+                    <td style="padding: 15px;">{{ item.quantity }} шт.</td>
+                    <td style="padding: 15px;"><strong>{{ item.price * item.quantity }} руб.</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="border-top: 2px solid var(--primary-black);">
+                    <td colspan="3" style="padding: 15px; text-align: right; font-size: 18px; font-weight: 700;">Итого:</td>
+                    <td style="padding: 15px; font-size: 24px; font-weight: 700;">{{ order.total }} руб.</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock %}

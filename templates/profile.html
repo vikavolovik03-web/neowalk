@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Профиль - {{ current_user.username }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 60px 0;">
+    <h1 style="margin-bottom: 40px;">Личный кабинет</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px;">
+        <div style="background: var(--light-gray); padding: 30px; border-radius: 20px;">
+            <h3 style="margin-bottom: 20px;">{{ current_user.username }}</h3>
+            <p style="color: var(--accent-gray); margin-bottom: 10px;">📧 {{ current_user.email }}</p>
+            <p style="color: var(--accent-gray); margin-bottom: 30px;">📅 С нами с: {{ current_user.created_at.strftime('%d.%m.%Y') }}</p>
+            
+            <a href="{{ url_for('logout') }}" style="display: block; text-align: center; padding: 15px; background: var(--primary-black); color: white; border-radius: 10px; text-decoration: none;">Выйти</a>
+        </div>
+        
+        <div>
+            <h3 style="margin-bottom: 20px;">История заказов</h3>
+            
+            {% if orders %}
+                {% for order in orders %}
+                <div style="border: 2px solid var(--light-gray); border-radius: 15px; padding: 20px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <strong>Заказ #{{ order.id }}</strong>
+                        <span style="color: var(--accent-gray);">{{ order.created_at.strftime('%d.%m.%Y') }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Статус: <b>{{ order.status }}</b></span>
+                        <span style="font-size: 20px; font-weight: 700;">{{ order.total }} руб</span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: var(--accent-gray);">У вас пока нет заказов.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

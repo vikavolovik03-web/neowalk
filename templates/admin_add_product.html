@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Добавить товар{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 50px; max-width: 600px;">
+    <h1>Добавить новый товар</h1>
+    <form method="POST" style="background: #f9f9f9; padding: 20px; border-radius: 10px;">
+        <div style="margin-bottom: 10px;">
+            <label>Название:</label>
+            <input type="text" name="name" required style="width: 100%; padding: 8px;">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Цена:</label>
+            <input type="number" name="price" required style="width: 100%; padding: 8px;">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Ссылка на картинку (путь):</label>
+            <input type="text" name="image" placeholder="images/nike.jpg" required style="width: 100%; padding: 8px;">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Количество на складе:</label>
+            <input type="number" name="stock" value="10" required style="width: 100%; padding: 8px;">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Описание:</label>
+            <textarea name="description" style="width: 100%; height: 100px;"></textarea>
+        </div>
+        <button type="submit" style="background: #1a1a1a; color: white; border: none; padding: 10px 20px; cursor: pointer;">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Заказы - Админка{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 60px 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1>Все заказы</h1>
+        <a href="{{ url_for('admin_dashboard') }}" style="padding: 10px 20px; background: var(--light-gray); border-radius: 8px; text-decoration: none;">← Назад</a>
+    </div>
+    
+    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden;">
+        <thead style="background: var(--primary-black); color: white;">
+            <tr>
+                <th style="padding: 15px; text-align: left;">№ заказа</th>
+                <th style="padding: 15px; text-align: left;">Клиент</th>
+                <th style="padding: 15px; text-align: left;">Телефон</th>
+                <th style="padding: 15px; text-align: left;">Сумма</th>
+                <th style="padding: 15px; text-align: left;">Статус</th>
+                <th style="padding: 15px; text-align: left;">Дата</th>
+                <th style="padding: 15px; text-align: left;">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr style="border-bottom: 1px solid var(--light-gray);">
+                <td style="padding: 15px;"><strong>#{{ order.id }}</strong></td>
+                <td style="padding: 15px;">{{ order.user.username }}</td>
+                <td style="padding: 15px;">{{ order.user.phone or 'Не указан' }}</td>
+                <td style="padding: 15px;"><strong>{{ order.total }} руб.</strong></td>
+                <td style="padding: 15px;">
+                    <span style="padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; background: 
+                        {% if order.status == 'new' %}#FFE5E5; color: #E74C3C
+                        {% elif order.status == 'processing' %}#FFF4E5; color: #F39C12
+                        {% elif order.status == 'shipped' %}#E5F0FF; color: #3498DB
+                        {% elif order.status == 'delivered' %}#E5FFE9; color: #27AE60
+                        {% else %}#F5F5F5; color: #6B6B6B{% endif %};">
+                        {% if order.status == 'new' %}Новый
+                        {% elif order.status == 'processing' %}В обработке
+                        {% elif order.status == 'shipped' %}Отправлен
+                        {% elif order.status == 'delivered' %}Доставлен
+                        {% elif order.status == 'cancelled' %}Отменен
+                        {% else %}{{ order.status }}{% endif %}
+                    </span>
+                </td>
+                <td style="padding: 15px;">{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td style="padding: 15px;">
+                    <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" style="color: var(--primary-black); text-decoration: underline;">Просмотр</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" style="padding: 40px; text-align: center; color: var(--accent-gray);">Заказов пока нет</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

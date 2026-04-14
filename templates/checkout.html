@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Оформление заказа - NeoWalk{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 60px 0;">
+    <h1 style="margin-bottom: 40px;">Оформление заказа</h1>
+    
+    <form method="POST" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+        <!-- Данные доставки -->
+        <div style="background: var(--light-gray); padding: 30px; border-radius: 15px;">
+            <h3 style="margin-bottom: 20px;">Данные доставки</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Телефон *</label>
+                <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required style="width: 100%; padding: 12px; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 15px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Город *</label>
+                <input type="text" name="city" placeholder="Москва" required style="width: 100%; padding: 12px; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 15px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Адрес доставки *</label>
+                <textarea name="address" placeholder="Улица, дом, квартира" rows="3" required style="width: 100%; padding: 12px; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 15px;"></textarea>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Комментарий к заказу</label>
+                <textarea name="comment" placeholder="Дополнительная информация" rows="2" style="width: 100%; padding: 12px; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 15px;"></textarea>
+            </div>
+        </div>
+        
+        <!-- Товары и оплата -->
+        <div>
+            <div style="background: var(--light-gray); padding: 30px; border-radius: 15px; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 20px;">Ваш заказ</h3>
+                
+                {% for item in cart_items %}
+                <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #ddd;">
+                    <div>
+                        <strong>{{ item.product.name }}</strong>
+                        <p style="color: var(--accent-gray); font-size: 14px;">{{ item.quantity }} шт.</p>
+                    </div>
+                    <strong>{{ item.product.price * item.quantity }} руб.</strong>
+                </div>
+                {% endfor %}
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--primary-black);">
+                    <span style="font-size: 20px; font-weight: 700;">Итого:</span>
+                    <span style="font-size: 24px; font-weight: 700;">{{ total }} руб.</span>
+                </div>
+            </div>
+            
+            <button type="submit" style="width: 100%; padding: 18px; background: var(--primary-black); color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase;">Подтвердить заказ</button>
+            
+            <p style="text-align: center; margin-top: 15px; color: var(--accent-gray); font-size: 14px;">
+                Нажимая кнопку, вы соглашаетесь с условиями оферты
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}

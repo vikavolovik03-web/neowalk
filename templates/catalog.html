@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Каталог - NeoWalk{% endblock %}
+
+{% block content %}
+<section class="catalog-page">
+    <div class="container">
+        <div class="catalog-header">
+            <h1 class="catalog-title">{% if current_brand %}{{ current_brand }}{% else %}Каталог{% endif %}</h1>
+            
+            <div class="catalog-filters">
+                <a href="{{ url_for('catalog') }}" class="filter-btn {% if not current_brand %}active{% endif %}">Все</a>
+                {% for brand in brands %}
+                    <a href="{{ url_for('catalog_brand', brand_name=brand|lower) }}" class="filter-btn {% if current_brand == brand %}active{% endif %}">{{ brand }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{{ url_for('product', product_id=product.id) }}">
+                    <div class="product-image">
+                        {% if product.image %}
+                            <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}">
+                        {% else %}
+                            <span style="font-size: 50px;">👟</span>
+                        {% endif %}
+                    </div>
+                </a>
+                
+                <div class="product-info">
+                    <div class="product-brand">{{ product.brand.name }}</div>
+                    <div class="product-name">{{ product.name }}</div>
+                    <div class="product-price">
+                        <span class="current-price">{{ product.price }} руб</span>
+                        {% if product.old_price %}
+                            <span class="old-price">{{ product.old_price }} руб</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <p style="text-align: center; grid-column: 1/-1; font-size: 18px; color: var(--accent-gray);">
+                    Товары не найдены.
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

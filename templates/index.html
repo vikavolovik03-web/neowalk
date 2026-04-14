@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Главная - NeoWalk{% endblock %}
+
+{% block content %}
+
+<!-- 1. БАННЕР 2026 -->
+<div class="promo-banner-main">
+    <div class="banner-container">
+        <!-- Убедитесь, что файл называется banner-2026.jpg и лежит в static/images/ -->
+        <img src="{{ url_for('static', filename='images/banner-2026.jpg') }}" alt="Тренды 2026">
+    </div>
+</div>
+
+<!-- 2. БРЕНДЫ -->
+<section class="brands-section-full">
+    <div class="brands-container-full">
+        <h2 class="section-title">ВЫБЕРИ СВОЮ ФИРМУ</h2>
+        <div class="brands-grid-logos-full">
+            <a href="{{ url_for('catalog_brand', brand_name='nike') }}" class="brand-logo-item-full">
+                <img src="{{ url_for('static', filename='images/brands/nike.png') }}" alt="Nike">
+                <span class="brand-name">NIKE</span>
+            </a>
+            <a href="{{ url_for('catalog_brand', brand_name='adidas') }}" class="brand-logo-item-full">
+                <img src="{{ url_for('static', filename='images/brands/adidas.png') }}" alt="Adidas">
+                <span class="brand-name">ADIDAS</span>
+            </a>
+            <a href="{{ url_for('catalog_brand', brand_name='asics') }}" class="brand-logo-item-full">
+                <img src="{{ url_for('static', filename='images/brands/asics.png') }}" alt="Asics">
+                <span class="brand-name">ASICS</span>
+            </a>
+            <a href="{{ url_for('catalog_brand', brand_name='balenciaga') }}" class="brand-logo-item-full">
+                <img src="{{ url_for('static', filename='images/brands/balenciaga.png') }}" alt="Balenciaga">
+                <span class="brand-name">BALENCIAGA</span>
+            </a>
+            <a href="{{ url_for('catalog_brand', brand_name='puma') }}" class="brand-logo-item-full">
+                <img src="{{ url_for('static', filename='images/brands/puma.png') }}" alt="Puma">
+                <span class="brand-name">PUMA</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 3. НОВЫЕ ПОСТУПЛЕНИЯ -->
+<section class="new-arrivals-section-full">
+    <h2 class="section-title-full">НОВЫЕ ПОСТУПЛЕНИЯ</h2>
+    <div class="new-arrivals-grid-full">
+        <!-- Левая колонка: 3 товара + кнопка -->
+        <div class="new-arrivals-left-full">
+            <div class="new-arrivals-small-grid-full">
+                {% for product in new_products[:3] %}
+                <a href="{{ url_for('product', product_id=product.id) }}" class="product-card-small-full">
+                    <div class="product-image-small-full">
+                        {% if product.image %}
+                            <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}">
+                        {% else %}
+                            <span style="font-size:40px">👟</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-price-row-full">
+                        <span class="basket-icon">🛒</span>
+                        <span class="product-price-small-full">{{ product.price }} руб</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('catalog') }}" class="btn-to-shopping-full">К покупкам</a>
+        </div>
+
+        <!-- Правая колонка: 1 большой товар -->
+        <div class="new-arrivals-right-full">
+            {% if new_products[3] %}
+            <a href="{{ url_for('product', product_id=new_products[3].id) }}" class="product-card-large-full">
+                <div class="product-image-large-full">
+                    {% if new_products[3].image %}
+                        <img src="{{ url_for('static', filename=new_products[3].image) }}" alt="{{ new_products[3].name }}">
+                    {% else %}
+                        <span style="font-size:60px">👟</span>
+                    {% endif %}
+                </div>
+                <div class="product-price-row-large-full">
+                    <span class="basket-icon">🛒</span>
+                    <span class="product-price-large-full">{{ new_products[3].price }} руб</span>
+                </div>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- 4. РАСПРОДАЖА -->
+{% if sale_products %}
+<section class="sale-section">
+    <div class="sale-container">
+        <h2 class="sale-section-title">Распродажа</h2>
+        <div class="sale-grid">
+            <!-- Карточка 1: Фото + Инфо -->
+            {% if sale_products|length > 0 %}
+            <a href="{{ url_for('product', product_id=sale_products[0].id) }}" class="sale-card sale-card-featured">
+                <div class="sale-card-image">
+                    {% if sale_products[0].image %}
+                        <img src="{{ url_for('static', filename=sale_products[0].image) }}" alt="{{ sale_products[0].name }}">
+                    {% else %}
+                        <span style="font-size:50px">👟</span>
+                    {% endif %}
+                </div>
+                <div class="sale-card-info">
+                    <div class="sale-card-price">{{ sale_products[0].price }} руб</div>
+                    <div class="sale-card-name">{{ sale_products[0].brand.name }}<br>{{ sale_products[0].name }}</div>
+                    <span class="btn-view">Посмотреть</span>
+                </div>
+            </a>
+            {% endif %}
+
+            <!-- Карточка 2: Только Фото + Цена -->
+            {% if sale_products|length > 1 %}
+            <a href="{{ url_for('product', product_id=sale_products[1].id) }}" class="sale-card sale-card-simple">
+                <div class="sale-card-image">
+                    {% if sale_products[1].image %}
+                        <img src="{{ url_for('static', filename=sale_products[1].image) }}" alt="{{ sale_products[1].name }}">
+                    {% else %}
+                        <span style="font-size:50px">👟</span>
+                    {% endif %}
+                </div>
+                <div class="sale-card-price-overlay">{{ sale_products[1].price }} руб</div>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Админ-панель - NeoWalk{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 50px;">
+    <h1>Панель администратора</h1>
+    <div style="display: flex; gap: 20px; margin-top: 30px;">
+        <a href="{{ url_for('admin_products') }}" class="admin-card">
+            <h3>📦 Товары</h3>
+            <p>{{ products_count }} шт.</p>
+        </a>
+        <a href="{{ url_for('admin_users') }}" class="admin-card">
+            <h3>👥 Пользователи</h3>
+            <p>{{ users_count }} чел.</p>
+        </a>
+        <a href="{{ url_for('admin_orders') }}" class="admin-card">
+            <h3>📝 Заказы</h3>
+            <p>{{ orders_count }} шт.</p>
+        </a>
+        <div class="admin-card" style="cursor: default;">
+            <h3>💰 Выручка</h3>
+            <p>{{ revenue }} руб.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

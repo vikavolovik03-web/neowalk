@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Корзина - NeoWalk{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 60px 0;">
+    <h1 style="margin-bottom: 40px;">Корзина</h1>
+    
+    {% if cart_items %}
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 40px;">
+        <!-- Товары -->
+        <div>
+            {% for item in cart_items %}
+            <div style="display: flex; gap: 20px; padding: 20px; border: 2px solid var(--light-gray); border-radius: 15px; margin-bottom: 20px;">
+                <div style="width: 120px; height: 120px; background: var(--light-gray); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    {% if item.product.image %}
+                        <img src="{{ url_for('static', filename=item.product.image) }}" style="max-width: 80%; max-height: 80%; object-fit: contain;">
+                    {% else %}
+                        <span style="font-size: 40px;">👟</span>
+                    {% endif %}
+                </div>
+                
+                <div style="flex: 1;">
+                    <h3 style="margin-bottom: 10px;">{{ item.product.name }}</h3>
+                    <p style="color: var(--accent-gray); margin-bottom: 10px;">{{ item.product.brand.name }}</p>
+                    <p style="font-size: 20px; font-weight: 700; margin-bottom: 10px;">{{ item.product.price }} руб.</p>
+                    
+                    <form action="{{ url_for('update_cart') }}" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                        <input type="hidden" name="product_id" value="{{ item.product_id }}">
+                        <button type="submit" name="action" value="decrease" style="padding: 5px 15px; border: 2px solid var(--primary-black); background: white; cursor: pointer; border-radius: 5px;">-</button>
+                        <span style="font-weight: 600;">{{ item.quantity }}</span>
+                        <button type="submit" name="action" value="increase" style="padding: 5px 15px; border: 2px solid var(--primary-black); background: white; cursor: pointer; border-radius: 5px;">+</button>
+                    </form>
+                </div>
+                
+                <div style="text-align: right;">
+                    <p style="font-size: 24px; font-weight: 700; margin-bottom: 10px;">{{ item.product.price * item.quantity }} руб.</p>
+                    <form action="{{ url_for('remove_from_cart', product_id=item.product_id) }}" method="POST">
+                        <button type="submit" style="color: var(--sale-red); background: none; border: none; cursor: pointer; text-decoration: underline;">Удалить</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Итого -->
+        <div style="background: var(--light-gray); padding: 30px; border-radius: 15px; height: fit-content;">
+            <h3 style="margin-bottom: 20px;">Итого</h3>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <span>Товары:</span>
+                <span style="font-weight: 600;">{{ subtotal }} руб.</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; padding-top: 20px; border-top: 2px solid var(--primary-black);">
+                <span style="font-size: 20px; font-weight: 700;">Всего:</span>
+                <span style="font-size: 24px; font-weight: 700;">{{ total }} руб.</span>
+            </div>
+            <a href="{{ url_for('checkout') }}" style="display: block; text-align: center; padding: 15px; background: var(--primary-black); color: white; border-radius: 10px; text-decoration: none; font-weight: 600; margin-top: 20px;">Оформить заказ</a>
+        </div>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 60px; background: var(--light-gray); border-radius: 20px;">
+        <p style="font-size: 80px; margin-bottom: 20px;">🛒</p>
+        <h2 style="margin-bottom: 20px;">Ваша корзина пуста</h2>
+        <p style="color: var(--accent-gray); margin-bottom: 30px;">Добавьте товары из каталога</p>
+        <a href="{{ url_for('catalog') }}" style="display: inline-block; padding: 15px 40px; background: var(--primary-black); color: white; border-radius: 25px; text-decoration: none; font-weight: 600;">Перейти к покупкам</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
